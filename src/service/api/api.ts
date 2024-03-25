@@ -21,7 +21,7 @@ export const fetchProducts = async () => {
     return { data: response.data, error: null };
   } catch (err: any) {
     if (err.response) {
-      console.error('Error fetching data:', err.response.data);
+      console.error('Error fetching products:', err.response.data);
       return { data: null, error: err.response.data };
     } else {
       console.error('Error:', err.message);
@@ -37,13 +37,16 @@ export const fetchUserData = async () => {
     return { data: response.data, error: null };
   } catch (err: any) {
     if (err.response) {
-      console.error('Error fetching data:', err.response.data);
-      return { data: null, error: err.response.data };
+      console.error('Error fetching user:', err.response.status
+      );
+      return { data: null, error: err.response.status };
     } else {
       console.error('Error:', err.message);
       return { data: null, error: err.message };
     }
   }
 };
+
+
 
 export default api;

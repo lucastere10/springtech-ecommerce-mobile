@@ -13,3 +13,9 @@ interface RegisterRequest {
     senha: string;
     role: string;
 }
+
+
+interface GoogleRegisterRequest {
+    nome: string;
+    login: string;
+}

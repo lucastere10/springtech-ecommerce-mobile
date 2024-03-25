@@ -6,13 +6,10 @@ import { registerSchema } from "../../schemas/authSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 export default function Register() {
-
-
     return (
         <Container></Container>
     )
 }
-
 
 const Container = () => {
 
@@ -29,13 +26,14 @@ const Container = () => {
                 contentContainerStyle={{ flexGrow: 1 }}
             >
                 <Box
-                    mt={36}
-                    gap={16}
-                    px={24}
+                    h={'$1/5'}
+                />
+                <Box
+                    p={28}
                 >
-                    <Text textAlign="center">PAGINA DE CADASTRO</Text>
+                    <Text mb={24} fontWeight="$bold" alignSelf="flex-start" fontSize={24}>Cadastrar</Text>
                     <RegisterForm />
-                    <Box flex={1} flexDirection="row" gap={8} justifyContent="center">
+                    <Box mt={8} ml={8} flexDirection="row" gap={8}>
                         <Text>Já tem uma conta?</Text>
                         <Link onPress={handleRouteChange}>
                             <Text>
@@ -51,6 +49,8 @@ const Container = () => {
 
 const RegisterForm = () => {
 
+    const navigation = useNavigation()
+
     const {
         handleSubmit,
         control,
@@ -60,111 +60,121 @@ const RegisterForm = () => {
     });
 
     const onSubmit: SubmitHandler<RegisterRequest> = async (data) => {
-        await registerUser(data)
+        const register = await registerUser(data)
+        if (register) {
+            navigation.navigate('login')
+        } else if (!register) {
+
+        }
     }
 
     return (
         <Box
-            mt={22}
-            flex={1}
-            gap={6}
-            px={24}
+        gap={12}
         >
-            <Input variant="rounded" size="lg" isDisabled={false} isInvalid={false} isReadOnly={false} >
-                <Controller
-                    control={control}
-                    rules={{ required: true }}
-                    name='nome'
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <InputField
-                            type="text"
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            placeholder='Digite seu nome'
-                        />
-                    )}
-                />
-            </Input>
-            {errors.nome && (
-                <Text alignSelf="flex-start" ml={16} color="red">{errors.nome.message}</Text>
-            )}
-
-            <Input mt={16} variant="rounded" size="lg" isDisabled={false} isInvalid={false} isReadOnly={false} >
-                <Controller
-                    control={control}
-                    rules={{ required: true }}
-                    name='login'
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <InputField
-                            type="text"
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            placeholder='Digite seu email'
-                        />
-                    )}
-                />
-            </Input>
-            {errors.login && (
-                <Text alignSelf="flex-start" ml={16} color="red">{errors.login.message}</Text>
-            )}
-
-            <Input mt={16} variant="rounded" size="lg" isDisabled={false} isInvalid={false} isReadOnly={false} >
-                <Controller
-                    control={control}
-                    rules={{ required: true }}
-                    name='senha'
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <InputField
-                            type="password"
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            placeholder='Digite sua senha'
-                        />
-                    )}
-                />
-            </Input>
-            {errors.senha && (
-                <Text alignSelf="flex-start" ml={16} color="red">{errors.senha.message}</Text>
-            )}
-
-
-            <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                    <Select
-                        selectedValue={value}
-                        onValueChange={(itemValue: string) => {
-                            onChange(itemValue);
-                        }}                    >
-                        <SelectTrigger mt={16} variant="rounded" size="lg">
-                            <SelectInput placeholder="Selecione o tipo de conta" />
-                            <SelectIcon>
-                                <Icon />
-                            </SelectIcon>
-                        </SelectTrigger>
-                        <SelectPortal>
-                            <SelectBackdrop />
-                            <SelectContent>
-                                <SelectDragIndicatorWrapper>
-                                    <SelectDragIndicator />
-                                </SelectDragIndicatorWrapper>
-                                <SelectItem label="Administrador" value="ADMIN" />
-                                <SelectItem label="Cliente" value="CLIENTE" />
-                            </SelectContent>
-                        </SelectPortal>
-                    </Select>
+            <Box>
+                <Input variant="underlined" size="lg" isDisabled={false} isInvalid={false} isReadOnly={false} >
+                    <Controller
+                        control={control}
+                        rules={{ required: true }}
+                        name='nome'
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <InputField
+                                type="text"
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                placeholder='Digite seu nome'
+                            />
+                        )}
+                    />
+                </Input>
+                {errors.nome && (
+                    <Text alignSelf="flex-start" ml={8} mt={1} color="red">{errors.nome.message}</Text>
                 )}
-                rules={{ required: true }}
-                name='role'
-            />
-            {errors.role && (
-                <Text alignSelf="flex-start" ml={16} color="red">{errors.role.message}</Text>
-            )}
+            </Box>
 
-            <Button alignSelf="center" gap={8} size="lg" variant="solid" action="primary" mt={24} isDisabled={false} isFocusVisible={false} onPress={handleSubmit(onSubmit)}>
+            <Box>
+                <Input variant="underlined" size="lg" isDisabled={false} isInvalid={false} isReadOnly={false} >
+                    <Controller
+                        control={control}
+                        rules={{ required: true }}
+                        name='login'
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <InputField
+                                type="text"
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                placeholder='Digite seu email'
+                            />
+                        )}
+                    />
+                </Input>
+                {errors.login && (
+                    <Text alignSelf="flex-start" ml={8} mt={1} color="red">{errors.login.message}</Text>
+                )}
+            </Box>
+
+            <Box>
+                <Input variant="underlined" size="lg" isDisabled={false} isInvalid={false} isReadOnly={false} >
+                    <Controller
+                        control={control}
+                        rules={{ required: true }}
+                        name='senha'
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <InputField
+                                type="password"
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                placeholder='Digite sua senha'
+                            />
+                        )}
+                    />
+                </Input>
+                {errors.senha && (
+                    <Text alignSelf="flex-start" ml={8} mt={1} color="red">{errors.senha.message}</Text>
+                )}
+            </Box>
+
+
+            <Box>
+                <Controller
+                    control={control}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <Select
+                            selectedValue={value}
+                            onValueChange={(itemValue: string) => {
+                                onChange(itemValue);
+                            }}                    >
+                            <SelectTrigger variant="underlined" size="lg">
+                                <SelectInput placeholder="Selecione o tipo de conta" />
+                                <SelectIcon>
+                                    <Icon />
+                                </SelectIcon>
+                            </SelectTrigger>
+                            <SelectPortal>
+                                <SelectBackdrop />
+                                <SelectContent>
+                                    <SelectDragIndicatorWrapper>
+                                        <SelectDragIndicator />
+                                    </SelectDragIndicatorWrapper>
+                                    <SelectItem label="Administrador" value="ADMIN" />
+                                    <SelectItem label="Cliente" value="CLIENTE" />
+                                </SelectContent>
+                            </SelectPortal>
+                        </Select>
+                    )}
+                    rules={{ required: true }}
+                    name='role'
+                />
+                {errors.role && (
+                    <Text alignSelf="flex-start" ml={8} mt={1} color="red">{errors.role.message}</Text>
+                )}
+            </Box>
+
+            <Button gap={8} size="lg" variant="solid" action="primary" mt={24} isDisabled={false} isFocusVisible={false} onPress={handleSubmit(onSubmit)}>
                 <ButtonText>Registrar</ButtonText>
                 <ButtonIcon as={EditIcon} />
             </Button>

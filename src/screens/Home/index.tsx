@@ -1,14 +1,37 @@
 import { Box, Button, ScrollView, Text } from "@gluestack-ui/themed";
 import { HomeCard } from "../../components/Cards/HomeCard";
 import { useEffect, useState } from "react";
-import { fetchProducts } from "../../service/api/api";
-import { Input } from "@gluestack-ui/themed";
+import { fetchProducts, fetchUserData } from "../../service/api/api";
+import { Alert } from "react-native";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Home() {
   return <Container />;
 };
 
 const Container = () => {
+  const { signOut } = useAuth()
+
+  const getUser = async () => {
+      const { data, error } = await fetchUserData();
+      if (error === 403) {
+        Alert.alert(
+          "Sessão Expirada",
+          "Sua Sessão expirou. Favor fazer login novamente.",
+          [
+            {
+              text: "OK", onPress: () => {signOut()}
+            }
+          ]
+        );
+      }
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
+
   return (
     <Box flex={1} backgroundColor="$white">
       <ScrollView
@@ -41,9 +64,9 @@ const CardsContainer = () => {
     getProducts();
   }, []);
 
-  return(
+  return (
     <Box>
-      <Button onPress={() => {console.log(produtos.map((produto, index) => {console.log(produto)}))}}>
+      <Button onPress={() => { console.log(produtos.map((produto, index) => { console.log(produto) })) }}>
         <Text>Debug</Text>
       </Button>
       {produtos.map((produto, index) => (

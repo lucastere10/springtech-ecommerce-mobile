@@ -12,12 +12,30 @@ export const registerUser = async (data: RegisterRequest) => {
         });
         console.log(res.data);
         Alert.alert('Usuário registrado com sucesso!');
-    } catch (error) {
-        console.error(error);
-        Alert.alert('Um erro ocorreu ao tentar registrar o usuário');
+        return true;
+    } catch (err: any) {
+        if (err.response.data.userMessage) {
+            Alert.alert(err.response.data.userMessage);
+        } else {
+            console.error('Error:', err.message);
+        }
+        return false;
     }
 };
 
+export const registerUserWithGoogle = async ({ login, senha, nome }: { login: string, senha: string, nome: string }): Promise<string | boolean> => {
+    try {
+        const response = await api.post('/auth/googleLogin', {
+            nome: nome,
+            login: login,
+            senha: senha,
+        });
+        return response.data.token;
+    } catch (error: any) {
+        console.error(error);
+        return false;
+    }
+};
 
 export const loginUser = async (data: LoginRequest) => {
     try {
@@ -33,12 +51,28 @@ export const loginUser = async (data: LoginRequest) => {
         console.log(`token: ${response.data.token}`)
         return true; // Login was successful
     } catch (err: any) {
-        if (err.response && err.response.data && err.response.data.userMessage) {
+        if (err.response.data.userMessage) {
             Alert.alert(err.response.data.userMessage);
         } else {
             console.error('Error:', err.message);
         }
         return false; // Login failed
+    }
+}
+
+export const fetchTotp = async () => {
+    try {
+        const response = await api.get(
+            '/auth/totp/verifymobile',
+        );
+        return response.data
+    } catch (err: any) {
+        if (err.response.data.userMessage) {
+            Alert.alert(err.response.data.userMessage);
+        } else {
+            console.error('Error:', err.message);
+        }
+        return false;
     }
 }
 

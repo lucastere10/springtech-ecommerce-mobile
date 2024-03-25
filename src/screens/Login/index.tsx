@@ -1,4 +1,4 @@
-import { AddIcon, Box, Button, ButtonIcon, ButtonText, Input, InputField, ScrollView, Link, Text } from "@gluestack-ui/themed";
+import { AddIcon, Box, Button, ButtonIcon, ButtonText, Input, InputField, ScrollView, Link, Text, Center, Divider } from "@gluestack-ui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Alert } from "react-native";
@@ -7,6 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../../schemas/authSchema";
 
 export default function Login() {
+
     return (
         <Container />
     )
@@ -14,10 +15,14 @@ export default function Login() {
 
 const Container = () => {
     const navigation = useNavigation()
-    const { signIn } = useAuth();
+    const { signIn, signInWithGoogle } = useAuth();
 
     function handleRouteChangeToRegister() {
         navigation.navigate('register');
+    }
+
+    function handleGoogleSignIn() {
+        signInWithGoogle()
     }
 
     const {
@@ -31,7 +36,6 @@ const Container = () => {
     const onSubmit: SubmitHandler<LoginRequest> = async (data) => {
         try {
             await signIn(data);
-
         } catch (error: any) {
             console.error(error);
             if (error.response.data.userMessage) {
@@ -41,75 +45,86 @@ const Container = () => {
             }
         }
     };
-    
-
-
 
     return (
-        <Box flex={1} backgroundColor="$white" pt={12}>
+        <Box flex={1}>
             <ScrollView
                 style={{ height: '100%' }}
                 contentContainerStyle={{ flexGrow: 1 }}
             >
                 <Box
-                    mt={22}
-                    alignItems="center"
-                    flex={1}
-                    gap={16}
-                    px={24}
+                    h={'$1/5'}
+                />
+                <Box
+                    p={28}
                 >
-                    <Text>PAGINA DE LOGIN</Text>
-                    <Input variant="rounded" size="lg" isDisabled={false} isInvalid={false} isReadOnly={false} >
-                        <Controller
-                            control={control}
-                            rules={{ required: true }}
-                            name='login'
-                            render={({ field: { onChange, onBlur, value } }) => (
-                                <InputField
-                                    type="text"
-                                    onBlur={onBlur}
-                                    onChangeText={onChange}
-                                    value={value}
-                                    placeholder='Digite seu email'
+                    <Text fontWeight="$bold" alignSelf="flex-start" fontSize={24}>Seja bem vindo!</Text>
+                    <Box
+                        flex={1}
+                        gap={16}
+                    >
+                        <Box mt={24}>
+                            <Input variant="underlined" size="lg" isDisabled={false} isInvalid={false} isReadOnly={false} >
+                                <Controller
+                                    control={control}
+                                    rules={{ required: true }}
+                                    name='login'
+                                    render={({ field: { onChange, onBlur, value } }) => (
+                                        <InputField
+                                            type="text"
+                                            onBlur={onBlur}
+                                            onChangeText={onChange}
+                                            value={value}
+                                            placeholder='Digite seu email'
+                                        />
+                                    )}
                                 />
+                            </Input>
+                            {errors.login && (
+                                <Text alignSelf="flex-start" ml={8} color="red">{errors.login.message}</Text>
                             )}
-                        />
-                    </Input>
-                    {errors.login && (
-                        <Text alignSelf="flex-start" ml={16} color="red">{errors.login.message}</Text>
-                    )}
-                    <Input variant="rounded" size="lg" isDisabled={false} isInvalid={false} isReadOnly={false} >
-                        <Controller
-                            control={control}
-                            rules={{ required: true }}
-                            name='senha'
-                            render={({ field: { onChange, onBlur, value } }) => (
-                                <InputField
-                                    type="password"
-                                    onBlur={onBlur}
-                                    onChangeText={onChange}
-                                    value={value}
-                                    placeholder='Digite sua senha'
+                        </Box>
+                        <Box>
+                            <Input variant="underlined" size="lg" isDisabled={false} isInvalid={false} isReadOnly={false} >
+                                <Controller
+                                    control={control}
+                                    rules={{ required: true }}
+                                    name='senha'
+                                    render={({ field: { onChange, onBlur, value } }) => (
+                                        <InputField
+                                            type="password"
+                                            onBlur={onBlur}
+                                            onChangeText={onChange}
+                                            value={value}
+                                            placeholder='Digite sua senha'
+                                        />
+                                    )}
                                 />
+                            </Input>
+                            {errors.senha && (
+                                <Text alignSelf="flex-start" ml={8} color="red">{errors.senha.message}</Text>
                             )}
-                        />
-                    </Input>
-                    {errors.senha && (
-                        <Text alignSelf="flex-start" ml={16} color="red">{errors.senha.message}</Text>
-                    )}
+                        </Box>
+                        <Button bgColor="$primary600" mt={24} size="lg" variant="solid" action="primary" isDisabled={false} isFocusVisible={false} onPress={handleSubmit(onSubmit)}>
+                            <ButtonText>Continuar</ButtonText>
+                        </Button>
+                    </Box>
 
-                    <Button size="lg" variant="solid" action="primary" isDisabled={false} isFocusVisible={false} onPress={handleSubmit(onSubmit)}>
-                        <ButtonText>Logar</ButtonText>
-                        <ButtonIcon as={AddIcon} />
-                    </Button>
+                    <Divider my={24}></Divider>
 
-                    <Box flex={1} flexDirection="row" gap={8}>
-                        <Text>Ainda não tem uma conta?</Text>
-                        <Link onPress={handleRouteChangeToRegister}>
-                            <Text>
-                                Cadastrar.
-                            </Text>
-                        </Link>
+                    <Box>
+                        <Button bgColor="$secondary900" size="lg" variant="solid" action="primary" isDisabled={false} isFocusVisible={false} onPress={handleGoogleSignIn}>
+                            <ButtonText>Continuar Com o Google</ButtonText>
+                        </Button>
+
+                        <Box mt={8} ml={8} flexDirection="row" gap={8}>
+                            <Text>Ainda não tem uma conta?</Text>
+                            <Link onPress={handleRouteChangeToRegister}>
+                                <Text color="$primary600">
+                                    Cadastrar.
+                                </Text>
+                            </Link>
+                        </Box>
                     </Box>
                 </Box>
             </ScrollView>
